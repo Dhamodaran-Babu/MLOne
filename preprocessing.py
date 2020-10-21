@@ -25,17 +25,12 @@ def missing_values(data):
     df=pd.DataFrame(data)
     cols = df.columns
     num_cols = list(df._get_numeric_data().columns)
-    #print(num_cols)
-    char_cols= list(set(cols) - set(num_cols))
-    #print(char_cols)
-    #print(df.head())
-    num_filled=df[num_cols].fillna(df[num_cols].mean())
-    #print(num_filled.head())
-    char_filled=df[char_cols].fillna(df[char_cols].mode().iloc[0])
-    #print(char_filled.head())
-    imputed_data=pd.concat([char_filled, num_filled],axis=1)
-    #print(imputed_data.head())
-    return imputed_data,char_cols
+    char_cols_cols = list(set(cols) - set(num_cols))
+    for cols in char_cols:
+        df[cols] = df[cols].fillna(value=df[cols].mode()[0])
+    for cols in num_cols:
+        df[cols] = df[cols].fillna(value=df[cols].mean())
+    return df,char_cols
     
 def classification_preprocessing(data,char_cols):
     from sklearn.preprocessing import LabelEncoder
@@ -57,7 +52,18 @@ def classification_preprocessing(data,char_cols):
     x=scaler.transform(x)
     print(x)        
     
-    
+def regresssion_preprocessing(data):
+    from sklearn.preprocessing import LabelEncoder,OneHotEncoder
+    x=data.iloc[:,1:]
+    y=data.iloc[:,0]
+    onehot_encoder = OneHotEncoder(sparse=False)
+    X = onehot_encoder.fit_transform(x)
+    label_encoder = LabelEncoder()
+    Y = label_encoder.fit_transform(y)
+    from sklearn.preprocessing import StandardScaler
+    scaler = StandardScaler()
+    X = scaler.fit_transform(X)
+    return X,Y
     
     
     
@@ -66,7 +72,7 @@ data=pd.read_csv("hcvdat0.csv",index_col=0)
 #print(data.head())
 model = targetcheck(data)
 data,char_cols=missing_values(data)
-"""if(model == "Classification"):
+if(model == "Classification"):
     classification_preprocessing(data,char_cols)
 else:
-    """
+    regresssion_preprocessing(data)
