@@ -44,7 +44,7 @@ def balance_the_data(df):
     "Balance the data with SMOTE over sampling"
 
     from imblearn.over_sampling import SMOTE
-    over_sampler = SMOTE(sampling_strategy='all',random_state=101,)
+    over_sampler = SMOTE(sampling_strategy='all',random_state=101,n_jobs=-1)
     x,y = over_sampler.fit_resample(df.iloc[:,:-1],df.iloc[:,-1])
     return x,y
 
@@ -87,4 +87,4 @@ def preprocessor (data):
     else :
         x,y = regresssion_preprocessing(df)
 
-    return x,y
+    return x,y,pbm_type
