@@ -9,3 +9,7 @@ KNN params:
 2 < n_neighbors < 5
 metric = euclidean,manhattan,minkowski
 
+Logistic Regression:
+penalty = l1,none
+solver = default
+c = 0.1 geomspace,no.of elements =3

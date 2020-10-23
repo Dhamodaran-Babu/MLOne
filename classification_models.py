@@ -1,6 +1,7 @@
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import confusion_matrix,roc_auc_score,roc_curve,accuracy_score,make_scorer,average_precision_score
 import matplotlib.pyplot as plt
+import numpy as np
 
 def calculate_roc(estimator,xval,yval,model_name):
     """calculate auc score and plot the roc and auc"""
@@ -20,7 +21,7 @@ def calculate_roc(estimator,xval,yval,model_name):
     return auc_score
 
 
-def evaluate_performance(estimator,model_name,xval,yval):
+def evaluate_performance(estimator,xval,yval,model_name):
     """Results are dictionaries which contains the model type(knn,linear SVC,naive Bayes) as keys.
     They contain info on the performance of the estimator under different criteria"""
     ypred = estimator.predict(xval)
@@ -44,10 +45,26 @@ def fit_knn(xtrain,xval,ytrain,yval,stratified_splitter):
                                         n_jobs=-1,cv=stratified_splitter,random_state=101,return_train_score=True)
     random_search.fit(xtrain,ytrain.flatten())
     estimator = random_search.best_estimator_
-    model_results = evaluate_performance(estimator=estimator,model_name='KNN',xval=xval,yval=yval)
+    model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='KNN')
     
     return estimator,model_results
-                                        
+
+def fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter):
+    from sklearn.linear_model import LogisticRegression
+
+    estimator = LogisticRegression(random_state=101,n_jobs=-1)
+    penalty = ['l2','none']
+    c=np.geomspace(start=0.1,stop=10,num=3,endpoint=True)
+    params = {'penalty':penalty,'C':c}
+    scoring = {'Precision':'precision','Accuracy':make_scorer(accuracy_score),'AUC':'roc_auc'}
+    random_search = RandomizedSearchCV(estimator=estimator,param_distributions=params,scoring=scoring,refit='AUC',
+                                        n_jobs=-1,cv=stratified_splitter,random_state=101,return_train_score=True)
+    random_search.fit(xtrain,ytrain.flatten())
+    estimator = random_search.best_estimator_
+    model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='Log_reg')
+
+    return estimator, model_results
+
 
 def model_fitter(xtrain,ytrain,xval,yval):
     from sklearn.model_selection import StratifiedShuffleSplit
@@ -58,6 +75,8 @@ def model_fitter(xtrain,ytrain,xval,yval):
     results = {}
 
     all_estimators={}
-    all_estimators['KNN'],results['KNN'] = fit_knn(xtrain,xval,ytrain,yval,stratified_splitter,)
-
+    all_estimators['KNN'],results['KNN'] = fit_knn(xtrain,xval,ytrain,yval,stratified_splitter)
+    if len(np.unique(yval)) <= 2:
+        all_estimators['Log_reg'],results['Log_reg'] = fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter)
+    
     return all_estimators,results
