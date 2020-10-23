@@ -1,0 +1,6 @@
+Rules and guide lines for uploading the dataset
+1. The file should be either .csv or .xlsx
+2. Number of columns : 3 < cols > 100
+3. Number of rows : 200 < rows > 2500
+4.The index col must be the first column.If the dataset doesn't have an index column include it.For example,you can use row number as index.
+5.The dependent variable or the target class should be the last column

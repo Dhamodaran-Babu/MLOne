@@ -9,53 +9,66 @@ import numpy as np
 
 def targetcheck(data):
     """ Checks if the dataset is of classification model or regression model"""
-    target = data.iloc[:,1]
+    target = data.iloc[:,-1]
     unique_values = target.nunique()
-    print(unique_values)
-    print(unique_values/len(target))
     if(unique_values/len(target)>0.65):
-        print("Regression")
         return "Regression"
     else:
-        print("Classification")
         return("Classification")
 
-        
-def missing_values(data):
-    df=pd.DataFrame(data)
+def missing_values(df):
     cols = df.columns
     num_cols = list(df._get_numeric_data().columns)
-    char_cols_cols = list(set(cols) - set(num_cols))
+    char_cols= list(set(cols) - set(num_cols))
     for cols in char_cols:
         df[cols] = df[cols].fillna(value=df[cols].mode()[0])
     for cols in num_cols:
         df[cols] = df[cols].fillna(value=df[cols].mean())
     return df,char_cols
-    
-def classification_preprocessing(data,char_cols):
+
+def remove_outliers(df,cat_cols):
+    num_cols = list(set(df.columns) - set(cat_cols))
+    for col in num_cols:
+        if col is not df.columns[-1]:
+            feature = df[col]
+            sorted(feature)
+            q1,q3 = feature.quantile([0.25,0.75])
+            iqr = q3-q1
+            upper_limit = q3 + (1.5 * iqr)
+            lower_limit = q1 - (1.5 * iqr)
+            df[col] = np.where(df[col]>upper_limit,upper_limit,df[col])
+            df[col] = np.where(df[col]<lower_limit,lower_limit,df[col])
+    return df
+
+def balance_the_data(df):
+    "Balance the data with SMOTE over sampling"
+
+    from imblearn.over_sampling import SMOTE
+    over_sampler = SMOTE(sampling_strategy='all',random_state=101,)
+    x,y = over_sampler.fit_resample(df.iloc[:,:-1],df.iloc[:,-1])
+    return x,y
+
+def classification_preprocessing(df,cat_cols):
+
+    "Encode the categorical values"
     from sklearn.preprocessing import LabelEncoder
     encoder = LabelEncoder()
-    df=pd.DataFrame(data)
-    target = df.iloc[:,0]
-    encoder.fit(target)
-    #print(encoder.classes_)
-    target=encoder.transform(target)
-    print(target)
-    g = df.groupby(target,group_keys=False)
-    balanced_data = pd.DataFrame(g.apply(lambda x: x.sample(g.size().min()))).reset_index(drop=True)
-    print(balanced_data)
+    for col in cat_cols:
+        df[col] = encoder.fit_transform(df[col])
+
+    "Remove imbalance in the data"
+    x,y = balance_the_data(df)
+    
+    "Standard Scaling the data"
     from sklearn.preprocessing import StandardScaler
-    x = balanced_data.drop(balanced_data[char_cols],axis=1).values
-    #y = balanced_data[target].values
     scaler = StandardScaler()
-    scaler.fit(x)
-    x=scaler.transform(x)
-    print(x)        
+    x = scaler.fit_transform(x)
+    return x,y
     
 def regresssion_preprocessing(data):
     from sklearn.preprocessing import LabelEncoder,OneHotEncoder
-    x=data.iloc[:,1:]
-    y=data.iloc[:,0]
+    x=data.iloc[:,:-1]
+    y=data.iloc[:,-1]
     onehot_encoder = OneHotEncoder(sparse=False)
     X = onehot_encoder.fit_transform(x)
     label_encoder = LabelEncoder()
@@ -65,14 +78,13 @@ def regresssion_preprocessing(data):
     X = scaler.fit_transform(X)
     return X,Y
     
-    
-    
-    
-data=pd.read_csv("hcvdat0.csv",index_col=0)
-#print(data.head())
-model = targetcheck(data)
-data,char_cols=missing_values(data)
-if(model == "Classification"):
-    classification_preprocessing(data,char_cols)
-else:
-    regresssion_preprocessing(data)
+def preprocessor (data):
+    pbm_type = targetcheck(data)
+    df,cat_cols = missing_values(data)
+    df = remove_outliers(df,cat_cols = cat_cols)
+    if pbm_type is "Classification":
+        x,y = classification_preprocessing(df,cat_cols=cat_cols)
+    else :
+        x,y = regresssion_preprocessing(df)
+
+    return x,y

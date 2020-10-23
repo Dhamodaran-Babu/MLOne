@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 
+
+""" Finds whether the data is csv or excel.. 
+Validates whether the data contains sufficient amount of information"""
+
 def openinputfile(filename):
     filename_list=filename.split(".")
     if(filename_list[1]=="xlsx"):
