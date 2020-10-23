@@ -1,0 +1,11 @@
+Train Test Validation split ratio ** 70:20:10
+SSS No.of folds ** 10
+
+Random search params
+scores = AUC,precision,accuracy
+refit criterion = AUC
+
+KNN params:
+2 < n_neighbors < 5
+metric = euclidean,manhattan,minkowski
+
