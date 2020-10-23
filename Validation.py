@@ -8,7 +8,8 @@ def openinputfile(filename):
     elif(filename_list[1]=="csv"):
         data=pd.read_csv(filename)
     return data
-def validation(data):
+    
+def validate_data(filename):
     class Error(Exception):
         """Base class for other exceptions"""
     pass
@@ -23,6 +24,7 @@ def validation(data):
         """Raised when the input value is too large"""
     pass
     try:
+        data = openinputfile(filename=filename)
         nrows=len(data.values)
         ncol=len(data.columns)
         if nrows < 200:
@@ -33,12 +35,14 @@ def validation(data):
             raise ValueTooSmallError
         elif ncol > 100:
             raise ValueTooLargeError
+            
     except ValueTooSmallError:
         print("value is too small, try again!")
+        return None,False
     except ValueTooLargeError:
         print("value is too large, try again!")
+        return None,False
+
+    else :
+        return data,True
     
-    
-filename='Swimming Dataset.xlsx'
-data=openinputfile(filename)
-validation(data)

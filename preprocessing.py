@@ -13,7 +13,7 @@ def targetcheck(data):
     unique_values = target.nunique()
     print(unique_values)
     print(unique_values/len(target))
-    if(unique_values/len(target)>0.75):
+    if(unique_values/len(target)>0.65):
         print("Regression")
         return "Regression"
     else:
