@@ -68,7 +68,7 @@ def fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter):
 def fit_svc(xtrain,xval,ytrain,yval,stratified_splitter):
     from sklearn.svm import SVC
     
-    estimator = SVC()
+    estimator = SVC(probability=True, random_state=101)
     params = {'C' : [1,10,100], 'kernel' : ['rbf', 'linear'], 'gamma' : ['scale', 'auto']}
     scoring = {'Precision':'precision','Accuracy':make_scorer(accuracy_score),'AUC':'roc_auc'}
     random_search = RandomizedSearchCV(estimator=estimator,param_distributions=params,scoring=scoring,refit='AUC',
@@ -94,7 +94,7 @@ def fit_random_forest(xtrain,xval,ytrain,yval,stratified_splitter):
 def fit_decision_tree(xtrain,xval,ytrain,yval,stratified_splitter):
     from sklearn.tree import DecisionTreeClassifier
     
-    estimator = DecisionTreeClassifier(random_state=101,n_jobs=-1)
+    estimator = DecisionTreeClassifier(random_state=101)
     params = {'criterion' : ['gini', 'entropy'], 'splitter' : ['best', 'random']}
     scoring = {'Precision':'precision','Accuracy':make_scorer(accuracy_score),'AUC':'roc_auc'}
     random_search = RandomizedSearchCV(estimator=estimator,param_distributions=params,scoring=scoring,refit='AUC',
