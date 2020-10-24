@@ -14,10 +14,9 @@ def calculate_roc(estimator,xval,yval,model_name):
     plt.plot(fpr, tpr, marker='.', label='{} (area={})'.format(model_name,round(auc_score,4)))
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title("ROC-AUC CURVE for {}".format(model_name))
+    plt.title("ROC-AUC CURVE")
     plt.legend()
-    plt.savefig(model_name+'.jpg')
-    plt.show()
+    plt.savefig('ROC-AUC.jpg')
     return auc_score
 
 
@@ -78,5 +77,7 @@ def model_fitter(xtrain,ytrain,xval,yval):
     all_estimators['KNN'],results['KNN'] = fit_knn(xtrain,xval,ytrain,yval,stratified_splitter)
     if len(np.unique(yval)) <= 2:
         all_estimators['Log_reg'],results['Log_reg'] = fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter)
+
+    plt.show()
     
     return all_estimators,results
