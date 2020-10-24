@@ -65,6 +65,54 @@ def fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter):
 
     return estimator, model_results
 
+def fit_svc(xtrain,xval,ytrain,yval,stratified_splitter):
+    from sklearn.svm import SVC
+    
+    estimator = SVC()
+    params = {'C' : [1,10,100], 'kernel' : ['rbf', 'linear'], 'gamma' : ['scale', 'auto']}
+    scoring = {'Precision':'precision','Accuracy':make_scorer(accuracy_score),'AUC':'roc_auc'}
+    random_search = RandomizedSearchCV(estimator=estimator,param_distributions=params,scoring=scoring,refit='AUC',
+                                        n_jobs=-1,cv=stratified_splitter,random_state=101,return_train_score=True)
+    random_search.fit(xtrain,ytrain.flatten())
+    estimator = random_search.best_estimator_
+    model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='SVC')
+    return estimator,model_results
+
+def fit_random_forest(xtrain,xval,ytrain,yval,stratified_splitter):
+    from sklearn.ensemble import RandomForestClassifier
+    
+    estimator = RandomForestClassifier(random_state=101,n_jobs=-1)
+    params = {'n_estimators' : [10,100,200], 'criterion' : ['gini', 'entropy']}
+    scoring = {'Precision':'precision','Accuracy':make_scorer(accuracy_score),'AUC':'roc_auc'}
+    random_search = RandomizedSearchCV(estimator=estimator,param_distributions=params,scoring=scoring,refit='AUC',
+                                        n_jobs=-1,cv=stratified_splitter,random_state=101,return_train_score=True)
+    random_search.fit(xtrain,ytrain.flatten())
+    estimator = random_search.best_estimator_
+    model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='Random_Forest')
+    return estimator,model_results
+
+def fit_decision_tree(xtrain,xval,ytrain,yval,stratified_splitter):
+    from sklearn.tree import DecisionTreeClassifier
+    
+    estimator = DecisionTreeClassifier(random_state=101,n_jobs=-1)
+    params = {'criterion' : ['gini', 'entropy'], 'splitter' : ['best', 'random']}
+    scoring = {'Precision':'precision','Accuracy':make_scorer(accuracy_score),'AUC':'roc_auc'}
+    random_search = RandomizedSearchCV(estimator=estimator,param_distributions=params,scoring=scoring,refit='AUC',
+                                        n_jobs=-1,cv=stratified_splitter,random_state=101,return_train_score=True)
+    random_search.fit(xtrain,ytrain.flatten())
+    estimator = random_search.best_estimator_
+    model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='Decision_Tree')
+    return estimator,model_results
+
+def fit_GaussianNB(xtrain,xval,ytrain,yval,stratified_splitter):
+    from sklearn.naive_bayes import GaussianNB
+    
+    estimator = GaussianNB()
+    estimator.fit(xtrain,ytrain.flatten())
+    model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='GaussianNB')
+    return estimator,model_results
+    
+
 
 def model_fitter(xtrain,ytrain,xval,yval):
     from sklearn.model_selection import StratifiedShuffleSplit
@@ -78,5 +126,8 @@ def model_fitter(xtrain,ytrain,xval,yval):
     all_estimators['KNN'],results['KNN'] = fit_knn(xtrain,xval,ytrain,yval,stratified_splitter)
     if len(np.unique(yval)) <= 2:
         all_estimators['Log_reg'],results['Log_reg'] = fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter)
-    
+    all_estimators['SVC'],results['SVC'] = fit_svc(xtrain,xval,ytrain,yval,stratified_splitter)
+    all_estimators['Random_Forest'],results['Random_Forest'] = fit_random_forest(xtrain,xval,ytrain,yval,stratified_splitter)
+    all_estimators['Decision_Tree'],results['Decision_Tree'] = fit_decision_tree(xtrain,xval,ytrain,yval,stratified_splitter)
+    all_estimators['GaussianNB'],results['GaussianNB'] = fit_GaussianNB(xtrain,xval,ytrain,yval,stratified_splitter)
     return all_estimators,results
