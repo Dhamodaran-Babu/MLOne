@@ -123,6 +123,7 @@ def model_fitter(xtrain,ytrain,xval,yval):
     results = {}
 
     all_estimators={}
+    
     all_estimators['KNN'],results['KNN'] = fit_knn(xtrain,xval,ytrain,yval,stratified_splitter)
     if len(np.unique(yval)) <= 2:
         all_estimators['Log_reg'],results['Log_reg'] = fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter)
@@ -130,4 +131,5 @@ def model_fitter(xtrain,ytrain,xval,yval):
     all_estimators['Random_Forest'],results['Random_Forest'] = fit_random_forest(xtrain,xval,ytrain,yval,stratified_splitter)
     all_estimators['Decision_Tree'],results['Decision_Tree'] = fit_decision_tree(xtrain,xval,ytrain,yval,stratified_splitter)
     all_estimators['GaussianNB'],results['GaussianNB'] = fit_GaussianNB(xtrain,xval,ytrain,yval,stratified_splitter)
+    
     return all_estimators,results
