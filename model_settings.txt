@@ -1,3 +1,6 @@
+chi square Test
+p val < 0.1 
+
 Train Test Validation split ratio ** 70:20:10
 SSS No.of folds ** 10
 

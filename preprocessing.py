@@ -56,8 +56,13 @@ def classification_preprocessing(df,cat_cols):
     for col in cat_cols:
         df[col] = encoder.fit_transform(df[col])
 
+    "Select significant varibles with chi-square test"
+    from select_variables import chi_test
+    selected_features = chi_test(df)
+    feature_selected_df = df[selected_features+[df.columns[-1]]]
+
     "Remove imbalance in the data"
-    x,y = balance_the_data(df)
+    x,y = balance_the_data(feature_selected_df)
     
     "Standard Scaling the data"
     from sklearn.preprocessing import StandardScaler
