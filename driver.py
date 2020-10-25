@@ -5,7 +5,9 @@ warnings.filterwarnings("ignore")
 data,status = validate_data('diabetes.csv')
 
 if status :
-
+    from eda import explore_data
+    explore_data(data=data)
+    
     from preprocessing import preprocessor
     x,y,pbm_type = preprocessor(data)
     

@@ -16,3 +16,15 @@ Logistic Regression:
 penalty = l1,none
 solver = default
 c = 0.1 geomspace,no.of elements =3
+
+SVC
+params = {'C' : [1,10,100], 'kernel' : ['rbf', 'linear'], 'gamma' : ['scale', 'auto']}
+
+Random Forest Classifier
+params = {'n_estimators' : [10,100,200], 'criterion' : ['gini', 'entropy']}
+
+Decision Trees
+params = {'criterion' : ['gini', 'entropy'], 'splitter' : ['best', 'random']}
+
+Naive Bayes(Gaussian)
+default parameters
