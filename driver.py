@@ -21,6 +21,9 @@ if status :
 
     print(all_estimators)
     print(results)
+
+    from interpret_results import interpret_results
+    interpret_results(results)
     
 else :
     print("""Dataset didn't pass the criterions.Please make sure you have followed the guidelines properly.
