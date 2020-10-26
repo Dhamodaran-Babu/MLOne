@@ -1,7 +1,10 @@
+import warnings
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import confusion_matrix,roc_auc_score,roc_curve,accuracy_score,make_scorer,average_precision_score
 import matplotlib.pyplot as plt
 import numpy as np
+
+warnings.filterwarnings("ignore")
 
 def calculate_roc(estimator,xval,yval,model_name):
     """calculate auc score and plot the roc and auc"""
@@ -14,10 +17,9 @@ def calculate_roc(estimator,xval,yval,model_name):
     plt.plot(fpr, tpr, marker='.', label='{} (area={})'.format(model_name,round(auc_score,4)))
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title("ROC-AUC CURVE for {}".format(model_name))
+    plt.title("ROC-AUC CURVE")
     plt.legend()
-    plt.savefig(model_name+'.jpg')
-    plt.show()
+    plt.savefig('ROC-AUC.jpg')
     return auc_score
 
 

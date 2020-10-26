@@ -2,8 +2,9 @@ import warnings
 from validation import validate_data
 
 warnings.filterwarnings("ignore")
-data,status = validate_data('diabetes.csv')
-
+filepath = input("Enter the file path : ")
+data,status = validate_data(filepath)
+bias_var = False
 if status :
     from eda import explore_data
     explore_data(data=data)
@@ -22,8 +23,9 @@ if status :
     print(all_estimators)
     print(results)
 
-    from bias_variance import bv_decomp
-    bv_decomp(all_estimators,xtrain,ytrain,xval,yval)
+    if bias_var:
+        from bias_variance import bv_decomp
+        bv_decomp(all_estimators,xtrain,ytrain.flatten(),xval,yval.flatten())
 
     from interpret_results import interpret_results
     interpret_results(results)
