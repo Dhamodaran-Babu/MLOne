@@ -14,9 +14,10 @@ def calculate_roc(estimator,xval,yval,model_name):
     plt.plot(fpr, tpr, marker='.', label='{} (area={})'.format(model_name,round(auc_score,4)))
     plt.xlabel('False Positive Rate')
     plt.ylabel('True Positive Rate')
-    plt.title("ROC-AUC CURVE")
+    plt.title("ROC-AUC CURVE for {}".format(model_name))
     plt.legend()
-    plt.savefig('ROC-AUC.jpg')
+    plt.savefig(model_name+'.jpg')
+    plt.show()
     return auc_score
 
 
@@ -63,6 +64,7 @@ def fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter):
     model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='Log_reg')
 
     return estimator, model_results
+
 def fit_svc(xtrain,xval,ytrain,yval,stratified_splitter):
     from sklearn.svm import SVC
     
@@ -109,6 +111,8 @@ def fit_GaussianNB(xtrain,xval,ytrain,yval,stratified_splitter):
     estimator.fit(xtrain,ytrain.flatten())
     model_results = evaluate_performance(estimator=estimator,xval=xval,yval=yval,model_name='GaussianNB')
     return estimator,model_results
+    
+
 
 def model_fitter(xtrain,ytrain,xval,yval):
     from sklearn.model_selection import StratifiedShuffleSplit
@@ -119,6 +123,7 @@ def model_fitter(xtrain,ytrain,xval,yval):
     results = {}
 
     all_estimators={}
+    
     all_estimators['KNN'],results['KNN'] = fit_knn(xtrain,xval,ytrain,yval,stratified_splitter)
     if len(np.unique(yval)) <= 2:
         all_estimators['Log_reg'],results['Log_reg'] = fit_logistic_reg(xtrain,xval,ytrain,yval,stratified_splitter)
@@ -126,6 +131,5 @@ def model_fitter(xtrain,ytrain,xval,yval):
     all_estimators['Random_Forest'],results['Random_Forest'] = fit_random_forest(xtrain,xval,ytrain,yval,stratified_splitter)
     all_estimators['Decision_Tree'],results['Decision_Tree'] = fit_decision_tree(xtrain,xval,ytrain,yval,stratified_splitter)
     all_estimators['GaussianNB'],results['GaussianNB'] = fit_GaussianNB(xtrain,xval,ytrain,yval,stratified_splitter)
-    plt.show()
     
     return all_estimators,results
