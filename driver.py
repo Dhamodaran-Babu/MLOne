@@ -22,6 +22,9 @@ if status :
     print(all_estimators)
     print(results)
 
+    from bias_variance import bv_decomp
+    bv_decomp(all_estimators,xtrain,ytrain,xval,yval)
+
     from interpret_results import interpret_results
     interpret_results(results)
     
