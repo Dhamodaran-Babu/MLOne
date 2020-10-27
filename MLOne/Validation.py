@@ -8,9 +8,9 @@ Validates whether the data contains sufficient amount of information"""
 def openinputfile(filename):
     filename_list=filename.split(".")
     if(filename_list[1]=="xlsx"):
-        data=pd.read_excel(filename) 
+        data=pd.read_excel(filename,index_col=0) 
     elif(filename_list[1]=="csv"):
-        data=pd.read_csv(filename)
+        data=pd.read_csv(filename,index_col=0)
     return data
     
 def validate_data(filename):
@@ -28,6 +28,7 @@ def validate_data(filename):
         """Raised when the input value is too large"""
     pass
     try:
+        print("\n\n<<<<VALIDATING THE DATA>>>>\n\n")
         data = openinputfile(filename=filename)
         nrows=len(data.values)
         ncol=len(data.columns)

@@ -1,0 +1,32 @@
+Change log
+==========
+
+v 0.0.1 (27/10/2020)
+--------------------
+- First Release
+
+v 0.0.2 (27/10/2020)
+--------------------
+- Second Release
+- Minor Bug Fixes
+
+v 0.0.3 (27/10/2020)
+--------------------
+- Third Release
+- Minor Bug Fixes
+
+v 0.0.4 (27/10/2020)
+--------------------
+- Fourth Release
+- Minor Bug Fixes
+
+v 0.0.5 (27/10/2020)
+--------------------
+- Fifth Release
+- Minor Bug Fixes
+
+v 0.0.51 (27/10/2020)
+--------------------
+- Fifth(1) Release
+- Minor Bug Fixes
+- Added latst version of mlxtend in prerequisites

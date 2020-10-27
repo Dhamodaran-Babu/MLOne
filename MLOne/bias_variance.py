@@ -1,6 +1,7 @@
 from mlxtend.evaluate import bias_variance_decomp
 
 def bv_decomp(all_estimators, X_train, y_train, X_test, y_test):
+    print("\n\n<<<<DECOMPOSING THEBIAS AND VARIANCE>>>>\n\n")
     for key,value in all_estimators.items():
         avg_expected_loss, avg_bias, avg_var = bias_variance_decomp(
                 value, X_train, y_train, X_test, y_test, 

@@ -1,0 +1,8 @@
+pandas
+numpy
+matplotlib
+imblearn
+sklearn
+mlxtend>=0.17.3
+seaborn
+joblib

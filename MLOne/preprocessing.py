@@ -57,7 +57,7 @@ def classification_preprocessing(df,cat_cols):
         df[col] = encoder.fit_transform(df[col])
 
     "Select significant varibles with chi-square test"
-    from select_variables import chi_test
+    from MLOne.select_variables import chi_test
     selected_features = chi_test(df)
     feature_selected_df = df[selected_features+[df.columns[-1]]]
 
@@ -84,6 +84,7 @@ def regresssion_preprocessing(data):
     return X,Y
     
 def preprocessor (data):
+    print("\n\n<<<<PREPROCESSING THE DATA>>>>\n\n")
     pbm_type = targetcheck(data)
     df,cat_cols = missing_values(data)
     df = remove_outliers(df,cat_cols = cat_cols)

@@ -10,6 +10,7 @@ def uniform_splitter(x,y):
     return xtrain,xval,ytrain,yval
 
 def train_test_validation_splitter(x,y,pbm_type):
+    print("\n\n<<<<PERFORMING TRAIN TEST AND VALIDATION SPLIT>>>>\n\n")
     x = np.array(x);y=np.array(y).reshape(-1,1)
     if len(x.shape)==1 :
         x = x.reshape(-1,1)
