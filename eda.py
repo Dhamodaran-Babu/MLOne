@@ -39,8 +39,12 @@ def plot_box(dataframe,counter):
 def explore_data(data):
     summary_stat(data)
     counter=0
-    counter = pairplot(dataframe=data,xvars=list(data.columns[:2])+list(data.columns[-3:-1]),yvars=data.columns[2],
+    if len(data.columns)>=3:
+        counter = pairplot(dataframe=data,xvars=list(data.columns[:-2]),yvars=data.columns[-2:-1],
                         hue=data.columns[-1],counter=counter)
+    else:
+        sns.pairplot(data=data)
+        
     counter = plot_corr(dataframe=data,counter=counter)
     counter = plot_violin(dataframe=data,counter=counter)
     counter = plot_box(dataframe=data,counter=counter)
