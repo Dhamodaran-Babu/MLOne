@@ -1,7 +1,7 @@
 def Auto_Fit(filepath,bias_var=False):
 
     import warnings
-    from validation import validate_data
+    from Validation import validate_data
 
     warnings.filterwarnings("ignore")
     data,status = validate_data(filepath)
@@ -28,7 +28,10 @@ def Auto_Fit(filepath,bias_var=False):
             bv_decomp(all_estimators,xtrain,ytrain.flatten(),xval,yval.flatten())
 
         from interpret_results import interpret_results
-        interpret_results(results)
+        best_model = interpret_results(results)
+        from joblib import dump
+        print("\n\n<<<<DOWNLOADING THE OVERALL BEST MODEL>>>>\n\n")
+        dump(all_estimators[best_model],'overall_best_model.joblib')
         
     else :
         print("""Dataset didn't pass the criterions.Please make sure you have followed the guidelines properly.

@@ -117,6 +117,7 @@ def fit_GaussianNB(xtrain,xval,ytrain,yval,stratified_splitter):
 
 
 def model_fitter(xtrain,ytrain,xval,yval):
+    print("\n\n<<<<FITTING CLASSIFICATION MODELS>>>>\n\n")
     from sklearn.model_selection import StratifiedShuffleSplit
     stratified_splitter = StratifiedShuffleSplit(test_size=0.2,random_state=101)
 

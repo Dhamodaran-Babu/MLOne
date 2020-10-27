@@ -84,6 +84,7 @@ def regresssion_preprocessing(data):
     return X,Y
     
 def preprocessor (data):
+    print("\n\n<<<<PREPROCESSING THE DATA>>>>\n\n")
     pbm_type = targetcheck(data)
     df,cat_cols = missing_values(data)
     df = remove_outliers(df,cat_cols = cat_cols)

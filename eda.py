@@ -37,6 +37,7 @@ def plot_box(dataframe,counter):
     return counter
 
 def explore_data(data):
+    print("\n\n<<<<PERFORMING EXPLORATORY DATA ANALYSIS>>>>\n\n")
     summary_stat(data)
     counter=0
     if len(data.columns)>=3:
@@ -44,7 +45,7 @@ def explore_data(data):
                         hue=data.columns[-1],counter=counter)
     else:
         sns.pairplot(data=data)
-        
+
     counter = plot_corr(dataframe=data,counter=counter)
     counter = plot_violin(dataframe=data,counter=counter)
     counter = plot_box(dataframe=data,counter=counter)
