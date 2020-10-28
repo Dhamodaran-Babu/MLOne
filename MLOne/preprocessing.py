@@ -57,7 +57,7 @@ def classification_preprocessing(df,cat_cols):
         df[col] = encoder.fit_transform(df[col])
 
     "Select significant varibles with chi-square test"
-    from select_variables import chi_test
+    from MLOne.select_variables import chi_test
     selected_features = chi_test(df)
     feature_selected_df = df[selected_features+[df.columns[-1]]]
 
